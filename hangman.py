@@ -8,23 +8,23 @@ def draw_man(progress):
 	#  O
 	# /|\
 	# / \
-    if progress == 0:
-        print("No hanged parts yet! :)")
-        return
-    for i in range(0, progress)): # I don't like how this reads... not intuitive
-        if i == 0:
-            print(" O")
-        elif i == 1 and progress == 2:
-		    print(" |")
-        elif i == 2 and progress == 3:
-		    print("/|")
+	if progress == 0:
+		print("No hanged parts yet! :)")
+		return
+	for i in range(0, progress)): # I don't like how this reads... not intuitive
+		if i == 0:
+			print(" O")
+		elif i == 1 and progress == 2:
+			print(" |")
+		elif i == 2 and progress == 3:
+			print("/|")
 		elif i == 3 and progress <= 4:
-		    print("/|\")
+			print("/|\")
 		elif i == 4 and progress == 5:
-		    print("/")
+			print("/")
 			print("Yikes.")
 		else: # i == 5 and progress == 6
-		    print("/ \")
+			print("/ \")
 			print("Uh oh...")
 	return
 
@@ -34,11 +34,14 @@ def draw_man(progress):
 category = random.choice(["Color", "Language", "Animal"])
 print("Category: " + category)
 if category == "Color":
-    word = random.choice(["crimson", "tangerine", "lemon", "grass", "teal", "cerulean", "indigo", "lavender", "magenta"])
+	word = random.choice(["crimson", "tangerine", "lemon", "grass", "teal", "cerulean", "indigo", "lavender", "magenta"])
 elif category == "Language":
-    word = random.choice(["Python", "Spanish", "Java", "English", "HTML", "Chinese", "Swift", "Indonesian"])
+	word = random.choice(["Python", "Spanish", "Java", "English", "HTML", "Chinese", "Swift", "Indonesian"])
 else: # category == "Animal"
-    word = random.choice(["tiger", "beaver", "falcon", "bass", "kangaroo", "thylacine"])
+	word = random.choice(["tiger", "beaver", "falcon", "bass", "kangaroo", "thylacine"])
+
+# player's guessing progress on the word
+word_progress = ["-"] * len(word)
 
 # keep track of which letters have already been guessed
 guessed = []
@@ -47,28 +50,36 @@ guessed = []
 incorrect = 0
 
 while incorrect < 6:
-    # ask user for guess
+	# ask user for guess, which will be forced to lowercase
 	guess = 0
 	if not guess.isalpha():
-	    guess = input("Guess a letter or the word: ")
+		guess = input("Guess a letter or the word: ").lower()
 	
-	if guess == word:
+	if guess == word.lower():
 		print("You guessed the word! You win!")
-		draw_man(incorrect)
-		# update word progress to be complete
-		# show word progress
-    
+	elif len(guess) > 1: # if you guess a dupe word, shame on you
+		print("Sorry, that's not the word.")
+		incorrect += 1
+	elif guess in guessed:
+		print("You already guessed that letter.")
+	elif guess not in word:
+		print(guess + " is not in the word.")
+		incorrect += 1
+		guessed.append(guess)
+	else: # guess (letter) is in word
+		print(guess + " is in the word!")
+		guessed.append(guess)
+		for i in range(len(word)):
+			if word_progress[i] == "-" and word[i].lower() == guess:
+				word_progress[i] = guess
+	
+	draw_man(incorrect)
+	for i in range(len(word_progress)):
+		print(word_progress[i] + " ")
+	print("Guessed letters: ")
+	for i in range(len(guessed)):
+		print(guessed[i] + " ")
 
-# while guess does not contain only letters, keep re-prompting
-
-# if guess is multiple letters and is the answer, YOU WIN
-# else decrement wrong guesses
-
-# if guess is single letter:
-#     if dupe guess of letter, do nothing
-
-#     elif wrong guess, decrement wrong guesses remaining and add to person
-
-#     elif correct guess, record it
-
-# show word progress and man progress
+if incorrect == 6:
+	print("You lost!")
+	print("The word was: " + word)
