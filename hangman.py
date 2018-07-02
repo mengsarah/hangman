@@ -18,14 +18,13 @@ def draw_man(progress):
 			print(" |")
 		elif i == 2 and progress == 3:
 			print("/|")
-		elif i == 3 and progress <= 4:
+		elif i == 3 and progress >= 4:
 			print("/|\\")
 		elif i == 4 and progress == 5:
 			print("/")
 			print("Yikes.")
-		else: # i == 5 and progress == 6
+		elif i == 5 and progress == 6:
 			print("/ \\")
-			print("Uh oh...")
 	return
 
 # hardcoded word bank
@@ -89,11 +88,14 @@ if incorrect == 6:
 else: # we're out of the loop because we found or guessed the word
 	if "-" in word_progress:
 		print("You guessed the word! You win!")
+		for i in range(len(word)):
+			word_progress[i] = word[i]
 	else: # "-" not in word progress
 		print("You found the word! You win!")
-	draw_man(incorrect)
-	print(" ".join(word))
-	print("Guessed letters: ")
-	print(" ".join(guessed))
-
+# either way, show their final progress
+draw_man(incorrect)
+print(" ".join(word))
+print("Guessed letters: ")
+print(" ".join(guessed))
+print()
 print("Thanks for playing!")
