@@ -11,7 +11,7 @@ def draw_man(progress):
 	if progress == 0:
 		print("No hanged parts yet! :)")
 		return
-	for i in range(0, progress)): # I don't like how this reads... not intuitive
+	for i in range(0, progress): # I don't like how this reads... not intuitive
 		if i == 0:
 			print(" O")
 		elif i == 1 and progress == 2:
@@ -19,12 +19,12 @@ def draw_man(progress):
 		elif i == 2 and progress == 3:
 			print("/|")
 		elif i == 3 and progress <= 4:
-			print("/|\")
+			print("/|\\")
 		elif i == 4 and progress == 5:
 			print("/")
 			print("Yikes.")
 		else: # i == 5 and progress == 6
-			print("/ \")
+			print("/ \\")
 			print("Uh oh...")
 	return
 
@@ -49,20 +49,29 @@ guessed = []
 # user can have 6 wrong guesses
 incorrect = 0
 
-while incorrect < 6:
-	# ask user for guess, which will be forced to lowercase
-	guess = 0
+while incorrect < 6 and "-" in word_progress:
+	# display game progress
+	print()
+	draw_man(incorrect)
+	print(" ".join(word_progress))
+	print("Guessed letters: ")
+	print(" ".join(guessed))
+	print()
+	
+	# ask user for alphabetical guess, which will be forced lowercase
+	guess = "0"
 	if not guess.isalpha():
 		guess = input("Guess a letter or the word: ").lower()
 	
 	if guess == word.lower():
-		print("You guessed the word! You win!")
+		# oh snap you won let's go start the victory sequence
+		break
 	elif len(guess) > 1: # if you guess a dupe word, shame on you
 		print("Sorry, that's not the word.")
 		incorrect += 1
 	elif guess in guessed:
 		print("You already guessed that letter.")
-	elif guess not in word:
+	elif guess not in word.lower():
 		print(guess + " is not in the word.")
 		incorrect += 1
 		guessed.append(guess)
@@ -71,15 +80,20 @@ while incorrect < 6:
 		guessed.append(guess)
 		for i in range(len(word)):
 			if word_progress[i] == "-" and word[i].lower() == guess:
-				word_progress[i] = guess
-	
-	draw_man(incorrect)
-	for i in range(len(word_progress)):
-		print(word_progress[i] + " ")
-	print("Guessed letters: ")
-	for i in range(len(guessed)):
-		print(guessed[i] + " ")
+				word_progress[i] = word[i] # to make original caps show up
 
+print()
 if incorrect == 6:
 	print("You lost!")
 	print("The word was: " + word)
+else: # we're out of the loop because we found or guessed the word
+	if "-" in word_progress:
+		print("You guessed the word! You win!")
+	else: # "-" not in word progress
+		print("You found the word! You win!")
+	draw_man(incorrect)
+	print(" ".join(word))
+	print("Guessed letters: ")
+	print(" ".join(guessed))
+
+print("Thanks for playing!")
